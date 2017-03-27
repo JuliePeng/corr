@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Looking For the Most Correlated Tickers</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="build/nv.d3.css" rel="stylesheet" type="text/css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.2/d3.min.js" charset="utf-8"></script>
+    <script src="build/nv.d3.js"></script>
+
+</head>
+<body>
+<p>
+    Hello {{ firstname }} {{ lastname }} from Zhuli!
+</p>
+
+
+<div>
+
+<table class="t1">
+    <h1>Most Correlated 20 Pairs</h1>
+    {% for t in table %}
+    <tr>
+        {% for i in t %}
+        <td>{{ i }}</td>
+        {% endfor %}
+    </tr>
+    {% endfor %}
+</table>
+</div>
+
+<div id="chart" class='with-3d-shadow with-transitions' style="width:100%;height:60%">
+    <svg></svg>
+</div>
+
+<script>
+    nv.addGraph(function() {
+        var chart = nv.models.lineWithFocusChart();
+
+        chart.brushExtent([50,70]);
+
+        chart.xAxis.tickFormat(d3.format('d'));
+
+        chart.xAxis
+         .tickFormat(function(d) {
+          return d3.time.format('%d-%m-%y')(new Date(d))
+        });
+
+        chart.focusHeight(50 + 20);
+        chart.focusMargin({ "bottom": 20 + 20 });
+
+        chart.x2Axis
+         .tickFormat(function(d) {
+          return d3.time.format('%d-%m-%y')(new Date(d));
+
+        });
+
+
+        chart.yAxis.tickFormat(d3.format(',.2f'));
+        chart.y2Axis.tickFormat(d3.format(',.2f'));
+        chart.useInteractiveGuideline(true);
+
+        d3.select('#chart svg')
+            .datum({{ histchart }})
+            .call(chart);
+
+        nv.utils.windowResize(chart.update);
+
+        return chart;
+    });
+
+</script>
+
+</body>
+</html>
+
